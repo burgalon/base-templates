@@ -1,0 +1,15 @@
+.DS_Store
+tmp
+build
+Thumbs.db
+*.pyc
+firepython/dist
+firepython/firepython.egg-info
+MANIFEST
+index.yaml
+release/
+django/
+_generated_media/
+.dynamic_media/
+.idea/
+\w*
