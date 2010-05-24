@@ -1,0 +1,14 @@
+{% extends "site/catalog.html" %}
+{% load markup %}
+{% block main %}
+<h2>Tags</h2>
+<ul class="catalog tags">
+	{% for t in portfolio.tags|dictsortreversed:"tagged_count" %}
+	<li>
+			<a href="{{portfolio.url}}tag/{{t}}/">{{t|capfirst}}</a>
+			[ {{t.tagged_count}} ]
+	</li>
+	{% endfor %}
+	<li class="clear">&nbsp;</li>
+</ul>
+{% endblock %}

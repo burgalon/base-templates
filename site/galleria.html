@@ -1,0 +1,90 @@
+{% extends pack.base.template %}
+{% load markup %}
+{% block content %}
+	{% if items %}
+		<h2>{{ page }}</h2>
+		<div id="main_image"></div>
+		<div class="gallery">
+		<div class="gallery_wrap">
+		<ul>
+			{% for i in items %}
+			<li class="{%if forloop.first%}active{%endif%}">
+					<a class="item-thumb-wrapper" href="#" rel="{{i.get_file}}" title="{{i.sub_title|escape}}|{{i.description|escape}}">
+						{{ i.render_thumb }}
+					</a>
+					<a class="item-title" href="{{i.url}}">{{i}}</a>
+					{% if i.sub_title %}
+					<a class="item-sub-title" href="{{i.url}}">{{i.sub_title}}</a>
+					{% endif %}
+			</li>
+			{% endfor %}
+		</ul>
+		</div> 
+		</div> 
+		<p class="gallery_nav">
+			<a class="magnifier" href="#"><span>Magnify</span></a>
+			<a href="#" onclick="$.galleria.prev(); return false;"><span>&laquo; previous</span></a> | 
+			<a href="#" onclick="$.galleria.next(); return false;"><span>next &raquo;</span></a>
+		</p>
+	{% endif %}
+{% endblock %}
+{% block beforeBodyEnd %}
+	{{ block.super }}
+	<script type="text/javascript" src="{{MEDIA_URL}}portfolios/js/jquery.galleria.min.js"></script> 
+	<script type="text/javascript">
+	jQuery(function($) {
+		$('.gallery ul').galleria({
+			history   : true, // activates the history object for bookmarking, back-button etc.
+			clickNext : true, // helper for making the image clickable
+			insert    : '#main_image', // the containing selector for our main image
+			onImage   : function(image,caption,thumb) { // let's add some image effects for demonstration purposes
+				
+				// fade in the image & caption
+				if(! ($.browser.mozilla && navigator.appVersion.indexOf("Win")!=-1) ) { // FF/Win fades large images terribly slow
+					image.css('display','none').fadeIn(1000);
+				}
+				// reset caption since by default it is set to 'title' attribute of the image
+				split = caption.text().split('|')
+				caption.html(split[0] + '<br />' + split[1])
+				caption.css('display','none').fadeIn(1000);
+				
+				// fetch the thumbnail container
+				var _li = thumb.parents('li');
+				
+				
+				// fade out inactive thumbnail
+				_li.siblings().children('img.selected').fadeTo(500,1);
+				
+				// fade in active thumbnail
+				thumb.fadeTo('fast',0.3).addClass('selected');
+				
+				// add a title for the clickable image
+				image.attr('title','Next image >>');
+			},
+			onThumb : function(thumb) { // thumbnail effects goes here
+				
+				// fetch the thumbnail container
+				var _li = thumb.parents('li');
+				
+				// if thumbnail is active, fade all the way.
+				var _fadeTo = _li.is('.active') ? '0.3' : '1';
+				
+				// fade in the thumbnail when finnished loading
+				thumb.css({display:'none',opacity:_fadeTo}).fadeIn(1500);
+				
+				// hover effects
+				thumb.hover(
+					function() { thumb.fadeTo('fast',0.3); },
+					function() { _li.not('.active').children('img').fadeTo('fast',1); } // don't fade out if the parent is active
+				)
+			}
+		});
+		$('.magnifier').click(function(){
+			window.open($('#main_image img').attr('src'));
+			return false;
+		});
+	});
+	
+	</script>
+
+{% endblock %}

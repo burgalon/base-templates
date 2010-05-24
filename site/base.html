@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load utils %}
+{% block title %}
+{%if page.is_home %}
+	{{  portfolio.title }} - {{ dic.moto }}
+{%else%} 
+	{{ page }} | {{  portfolio.title }}  
+{%endif%}
+{% endblock %}
+
+{% block metaKeywords %}{% firstof page.tags_string dic.metaKeywords portfolio.tags_string %}{% endblock %}
+{% block metaDescription %}{{ portfolio.title }} - {{ dic.moto }}{% endblock %}
+
+{% block bodyClass %}{% if dic.rtl %}rtl {% endif %}page_{{page.slug_name}} {{dic.pattern}}{% endblock %}
+
+{% block css %}
+	{% if not dic.no_base_css %}
+	{{ block.super }}
+	{% endif %}
+{% endblock %}
+
+{% block head %}
+	{{ block.super }}
+	<style type="text/css">
+		{% if files.background.get_file %}body {background: url('{{ files.background.get_file|safe}}') center 0 no-repeat ;}{% endif %}
+		{% if files.logo.get_file %}.logo a{background:url({{ files.logo.get_file }}) no-repeat; display: block;} .logo a span {display:none;}{% endif %}
+	</style>
+	{% if dic.webmaster %}<meta name="verify-v1" content="{{ dic.webmaster }}" />{% endif %}
+{% endblock %}
+
+{% block logo %}
+	<a href="{{ portfolio.url }}" title="{{ dic.moto }}">
+		<span>{{  portfolio.title }}</span>
+	</a>
+{% endblock %}
+{% block topNav %}{% endblock %}
+{% block nav %}
+	{% nav_list nav request.META.PATH_INFO ""%}
+{% endblock %}
+
+{% block content %}
+	<div id="main" class="span-12 prepend-1 prepend-top colborder">
+	{% block main %}
+	{% endblock %}
+	</div>
+	<div id="sidebar" class="span-10 prepend-top last">
+	{% block sidebar %}
+		{% if items %}
+		{% with "horizontal" as catalog_class %}
+			{% include "site/catalog.inc.html" %}
+		{% endwith %}
+		{% endif %}
+	{% endblock %}
+	</div>
+{% endblock %}
+
+{% block footer %}
+	<div id="footer-portfolio">
+		{% block footer_portfolio %}
+		<a href="{{ portfolio.url }}">{{ portfolio.title }}</a>
+		{% endblock %}
+	</div>
+	<div id="footer-powered">
+		<a title="{{ site_excerpt }}" href="http://{{ site.domain }}">{{ site.name }}</a> {{ site_excerpt }} 
+		| <a rel="nofollow" href="http://{{ site.domain }}{{ page.get_absolute_url}}">DashBoard</a>
+		{% if last_portfolio %}
+		| Last portfolio viewed &lrm;<a href="{{ last_portfolio.url }}">{{ last_portfolio.title }}</a>
+		{% endif %}
+	</div> 
+{% endblock %}
+
+{% block beforeBodyEnd %}
+	{{ block.super }}
+ 	{{ pack.js.render }}
+ 	{% if dic.tracker and not user.is_safe %}
+		<script type="text/javascript">
+
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', '{{ dic.tracker }}']);
+		  _gaq.push(['_trackPageview']);
+
+		  (function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+
+		</script>
+	{% endif %}
+{% endblock %}

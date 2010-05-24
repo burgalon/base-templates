@@ -1,0 +1,11 @@
+{% extends "site/catalog.html" %}
+{% load markup %}
+{% block content %}
+	{% if items %}
+		<h2>{{page.name}}</h2>
+		{% with "horizontal" as catalog_class %}
+			{% include "site/catalog.inc.html" %}
+		{% endwith %}
+		<a class="rss" href="rss.xml">RSS</a>
+	{% endif %}
+{% endblock %}

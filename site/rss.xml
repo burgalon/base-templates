@@ -1,0 +1,36 @@
+{% load markup %}<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom='http://www.w3.org/2005/Atom' xmlns:gphoto='http://schemas.google.com/photos/2007' xmlns:media='http://search.yahoo.com/mrss/' xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/' xmlns:gml='http://www.opengis.net/gml' xmlns:georss='http://www.georss.org/georss' version='2.0'>
+  <channel>
+    <title>{{ page }} | {{  portfolio.title }}</title>
+    <link>http://{{ site.domain }}{{ portfolio.url }}</link>
+    <description>{{ dic.moto.translate }}</description>
+    <language>en-us</language>
+    <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
+    <lastBuildDate>Tue, 10 Jun 2003 09:41:01 GMT</lastBuildDate>
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+    <generator>{{site.name}}</generator>
+    <managingEditor>webmaster@{{ site.domain }}</managingEditor>
+    <webMaster>webmaster@{{ site.domain }}</webMaster>
+    <ttl>5</ttl>
+ 	{% for i in items %}
+    <item>
+      <title>{{i}}</title>
+      <link>{{i.url}}</link>
+      <description>
+      	&lt;a class="item-thumb-wrapper" href="http://{{ site.domain }}{{i.url}}"&gt;
+      		&lt;img alt="{{i}}" title="{{i}}" class="item-thumb" src="http://{{ site.domain }}{{ i.render_thumb }}" /&gt;
+      	&lt;/a&gt; {{ i.description}}
+      </description>
+      <pubDate>{{i.time}}</pubDate>
+      <guid>http://{{ site.domain }}{{i.url}}</guid>
+      <media:group> 
+	      <media:content url='http://{{ site.domain }}{{ i.get_file }}' type='image/jpeg' medium='image'/>
+	      <media:title>{{i}}</media:title>
+	      <media:thumbnail url='http://{{ site.domain }}{{ i.get_file }}'/>
+	      <media:keywords>{{i.tags}}</media:keywords>
+	      <media:credit>{{  portfolio.title }}</media:credit>
+      </media:group>
+    </item>
+	{% endfor %}
+  </channel>
+</rss>

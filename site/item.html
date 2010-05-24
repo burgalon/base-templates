@@ -1,0 +1,27 @@
+{% extends pack.base.template %}
+{% load markup %}
+{% block title %}{{ item }} | {{  portfolio.title }}{% endblock %}
+{% block metaDescription %}{% firstof page.dic.sub_title item.name %}{%endblock %}
+{% block metaKeywords %}{{ item.tags }}{%endblock %}
+
+{% block content %}
+<h2>{{item.name}}</h2>
+<div class="item_wrap">
+	{% block item_render %}
+		{% ifequal item.mime_type "image/jpeg" %}
+			<a href="{{ next_item.url }}" title="{{ next_item.name }}">{{ item.render }}</a>
+		{% else %}
+			{{item.render}}
+		{% endifequal %}
+	{% endblock %}
+</div>
+{% block item_description %}
+	{% if page.dic.description %}
+	<div class="item-desc">{{ page.dic.description|textile }}</div>
+	{% endif %}
+	<div class="item_nav">
+		<a class="item-prev" href="{{prev_item.url}}" title="{{ prev_item.name }}">&laquo; Previous</a>
+		<a class="item-next" href="{{next_item.url}}" title="{{ next_item.name }}">Next &raquo;</a>
+	</div>
+{% endblock %}
+{% endblock %}
